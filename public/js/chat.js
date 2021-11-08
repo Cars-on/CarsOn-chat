@@ -10,25 +10,45 @@ const socket = io('http://localhost:9999');
 
 let idChatRoom = '';
 
+function onloadPage() {
+  const defaultAvatar =
+    'https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png';
+  const urlParams = new URLSearchParams(window.location.search);
+  const name = urlParams.get('name');
+  const email = urlParams.get('email');
+  const ad_owner_name = urlParams.get('ad_owner_name');
+  const ad_owner_email = urlParams.get('ad_owner_email');
+
+  socket.emit('start', {
+    name,
+    avatar: defaultAvatar,
+    email,
+  });
+
+  if (ad_owner_email && ad_owner_name) {
+    socket.emit('start', {
+      name: ad_owner_name,
+      avatar: defaultAvatar,
+      email: ad_owner_email,
+    });
+  }
+}
+
 function onLoad() {
   const urlParams = new URLSearchParams(window.location.search);
   const name = urlParams.get('name');
-  const avatar = urlParams.get('avatar');
   const email = urlParams.get('email');
+
+  const defaultAvatar =
+    'https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png';
 
   document.querySelector('.user_logged').innerHTML += `
     <img
       class="avatar_user_logged"
-      src=${avatar}
+      src=${defaultAvatar}
     />
     <strong id="user_logged">${name}</strong>
   `;
-
-  socket.emit('start', {
-    name,
-    avatar,
-    email,
-  });
 
   socket.on('new_users', user => {
     const existInDiv = document.getElementById(`user_${user._id}`);

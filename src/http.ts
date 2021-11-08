@@ -10,10 +10,13 @@ const app = express();
 
 const server = createServer(app);
 
-mongoose.connect('mongodb://localhost/socketchat', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  'mongodb://root:carson_app@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
